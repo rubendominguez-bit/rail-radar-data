@@ -1,6 +1,6 @@
 # Actualizador de Ouigo para Rail Radar
 
-Publicación gratuita preparada para un repositorio público de GitHub, GitHub Actions y GitHub Pages. Este directorio es el repositorio de publicación; no se publica el código de la app ni se incluye la clave del NAP en ningún fichero.
+Publicación activa en un repositorio público de GitHub, con GitHub Actions y GitHub Pages. Este directorio es el repositorio de publicación; no se publica el código de la app ni se incluye la clave del NAP en ningún fichero.
 
 1. Crear el repositorio con el contenido de este directorio.
 2. Guardar la clave del NAP como secreto de Actions llamado `NAP_API_KEY`.
@@ -14,4 +14,8 @@ Si falla la renovación, el trabajo falla y conserva la última publicación vá
 
 La publicación contiene datos programados, sin retrasos ni confirmaciones de circulación. Los avisos de ADIF y los comunicados oficiales del operador se consultan por separado.
 
-Estado inicial: preparado localmente. No está desplegado ni renovándose hasta conectar GitHub, configurar el secreto y verificar la primera ejecución.
+Estado: desplegado y verificado el 1 de noviembre de 2026. La primera ejecución descargó y validó el GTFS del NAP y publicó correctamente en GitHub Pages. La renovación diaria está activada y la app tiene configurado el manifiesto público.
+
+- Repositorio: https://github.com/rubendominguez-bit/rail-radar-data
+- Manifiesto: https://rubendominguez-bit.github.io/rail-radar-data/ouigo.json
+- Primera ejecución correcta: https://github.com/rubendominguez-bit/rail-radar-data/actions/runs/41310537327
