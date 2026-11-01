@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  pages: write
+  id-token: write
 concurrency:
   group: ouigo-publication
   cancel-in-progress: false
@@ -12,6 +14,9 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
       - name: Verificar el publicador
@@ -29,3 +34,12 @@ jobs:
             git commit -m 'Verify Ouigo timetable publication'
             git push
           fi
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Preparar los datos públicos
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+      - name: Publicar los datos
+        id: deployment
+        uses: actions/deploy-pages@v4
