@@ -4,9 +4,9 @@ Publicación gratuita preparada para un repositorio público de GitHub, GitHub A
 
 1. Crear el repositorio con el contenido de este directorio.
 2. Guardar la clave del NAP como secreto de Actions llamado `NAP_API_KEY`.
-3. Activar GitHub Pages desde la rama principal, directorio `/docs`.
+3. Activar GitHub Pages con Source: GitHub Actions. El trabajo publica únicamente el directorio `docs` con las acciones oficiales de Pages.
 4. Ejecutar «Renovar horario Ouigo» una primera vez y verificar la publicación.
-5. Configurar `RailRadarOuigoManifestURL` en la app con `https://USUARIO.github.io/REPOSITORIO/ouigo.json`.
+5. Configurar `RailRadarOuigoManifestURL` en la app con `https://rubendominguez-bit.github.io/rail-radar-data/ouigo.json`.
 
 El trabajo comprueba diariamente a las 06:17 UTC el último fichero GTFS validado del conjunto 1515. Descarga el enlace temporal emitido por el NAP sin enviar la clave al almacén del fichero. Valida estructura, límites, calendarios y caducidad antes de publicar. La app solo recibe el GTFS público y metadatos con hash SHA-256; nunca recibe la clave ni el enlace firmado temporal.
 
