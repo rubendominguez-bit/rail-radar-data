@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "operator": "ouigo",
+  "datasetID": 1515,
+  "sourceURL": "https://nap.transportes.gob.es/ConjuntoDato/Detail/1515",
+  "checkedAt": "2026-10-31T21:12:00Z",
+  "updatedAt": "2026-07-02T08:17:54.925407Z",
+  "validFrom": "20260626",
+  "validUntil": "20261212",
+  "archive": "ouigo-27d4b22dea390d1db98d5460bb4a51f17d528828d815862e73bd6a7268b89638.zip",
+  "sha256": "27d4b22dea390d1db98d5460bb4a51f17d528828d815862e73bd6a7268b89638",
+  "fileID": 1766,
+  "attribution": "Powered by MITRAMS · Ouigo · Punto de Acceso Nacional",
+  "licenseURL": "https://nap.transportes.gob.es/licencia-datos",
+  "realtime": false
+}
