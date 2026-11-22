@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: '17 6 * * *'
   workflow_dispatch:
+    inputs:
+      test_retry:
+        description: 'Probar recuperación simulando un fallo inicial de publicación'
+        type: boolean
+        default: false
 permissions:
   contents: write
   pages: write
@@ -13,10 +18,10 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 20
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url || steps.deployment_final.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
       - name: Verificar el publicador
@@ -24,7 +29,19 @@ jobs:
       - name: Descargar y validar el último GTFS
         env:
           NAP_API_KEY: ${{ secrets.NAP_API_KEY }}
-        run: python3 refresh_ouigo.py --output docs
+        shell: bash
+        run: |
+          for delay in 0 30 90; do
+            if [ "$delay" -gt 0 ]; then
+              echo "Reintentando la descarga en $delay segundos..."
+              sleep "$delay"
+            fi
+            if python3 refresh_ouigo.py --output docs; then
+              exit 0
+            fi
+          done
+          echo "::error::No se pudo renovar Ouigo tras tres intentos. Se conserva la publicación anterior."
+          exit 1
       - name: Publicar solo los datos y su atribución
         run: |
           git config user.name 'Rail Radar updater'
@@ -40,6 +57,30 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: docs
-      - name: Publicar los datos
+      - name: Publicar los datos (intento 1 de 3)
         id: deployment
+        continue-on-error: true
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 180000
+          # Solo en la prueba manual: un nombre inexistente reproduce el fallo observado.
+          artifact_name: ${{ inputs.test_retry == true && 'retry-test-missing-artifact' || 'github-pages' }}
+      - name: Esperar antes del segundo intento
+        if: ${{ steps.deployment.outcome == 'failure' }}
+        run: sleep 30
+      - name: Publicar los datos (intento 2 de 3)
+        id: deployment_retry
+        if: ${{ steps.deployment.outcome == 'failure' }}
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 180000
+      - name: Esperar antes del último intento
+        if: ${{ steps.deployment_retry.outcome == 'failure' }}
+        run: sleep 90
+      - name: Publicar los datos (intento 3 de 3)
+        id: deployment_final
+        if: ${{ steps.deployment_retry.outcome == 'failure' }}
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 180000
